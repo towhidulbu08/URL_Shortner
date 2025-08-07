@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import axios from "axios";
+import { createShortUrl } from "../apis/shortUrl.api";
 
 const UrlForm = () => {
   const [url, setUrl] = useState("https://www.google.com");
@@ -8,10 +8,16 @@ const UrlForm = () => {
   const [copied, setCopied] = useState(false);
 
   const handleSubmit = async () => {
-    const { data } = await axios.post("http://localhost:3000/api/create", {
-      url,
-    });
-    setShortUrl(data);
+    try {
+      const URL = await createShortUrl(url);
+      setShortUrl(URL);
+    } catch (error) {
+      // console.error("Error Name", error.name);
+      console.error("Error Message:", error.message);
+      // console.error("Error Code:", error.code);
+      // console.error("Error config", error.config);
+      // console.error("Error request:", error.request);
+    }
   };
 
   const handleCopy = () => {
